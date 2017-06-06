@@ -1,0 +1,15 @@
+{
+  "name": "3js-point-cloud-project-jcasto",
+  "version": "1.0.0",
+  "description": "Three.js Point Cloud Project",
+  "main": "web_deployment.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Joshua Castor",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.3",
+    "yargs": "^8.0.1"
+  }
+}
