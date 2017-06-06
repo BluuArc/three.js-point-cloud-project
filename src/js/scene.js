@@ -50,9 +50,23 @@ var Scene = function(options) {
             self.scene.add( obj );
         },
 
-        render: function() {
-            requestAnimationFrame( self.public.render );
-            self.renderer.render( self.scene, self.camera );
+        render: function (updateFn) {
+            function update_render() {
+                updateFn();
+                requestAnimationFrame(update_render);
+                self.renderer.render(self.scene, self.camera);
+            }
+
+            function regular_render() {
+                requestAnimationFrame(regular_render);
+                self.renderer.render(self.scene, self.camera);
+            }
+
+            if (updateFn && typeof updateFn === "function") {
+                update_render();
+            } else {
+                regular_render();
+            }
         }
 
     };
