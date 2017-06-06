@@ -1,6 +1,6 @@
 //camera is based off of https://stackoverflow.com/questions/23450588/isometric-camera-with-three-js
-var interactiveCameraConstructor = function(){
-    var aspect = window.innerWidth / window.innerHeight;
+var interactiveCameraConstructor = function(aspect){
+    // var aspect = window.innerWidth / window.innerHeight;
     var distance = 20;
     var camera = new THREE.OrthographicCamera(
         -distance*aspect, 

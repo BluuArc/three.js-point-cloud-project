@@ -10,15 +10,16 @@ var Scene = function(options) {
     var self = this;
 
     // scale the width and height to the screen size
-    var width = d3.select('.particleDiv').node().clientWidth;
-    var height = width * 0.85;
+    // var width = d3.select('.particleDiv').node().clientWidth;
+    var width = window.innerWidth*0.5;
+    var height = window.innerHeight;
 
     // create the scene
     self.scene = new THREE.Scene();
 
     // setup the camera
     // self.camera = new THREE.PerspectiveCamera( 75, width / height, 0.1, 1000 );
-    self.camera = interactiveCameraConstructor();
+    self.camera = interactiveCameraConstructor(720/1024);
 
     self.camera.lookAt(0,0,0);
     if(options.cameraPosition){
@@ -27,11 +28,7 @@ var Scene = function(options) {
         self.camera.position.set(0,2,20);
     }
 
-    // if(options.upVector){
-    //     self.camera.up = options.upVector;
-    // }
-
-    // self.camera.lookAt(scene.position)
+    self.scene.add(new THREE.AxisHelper(25));//x - red, y - green, z - blue
 
     // Add a directional light to show off the objects
     var light = new THREE.DirectionalLight( 0xffffff, 1.5);
@@ -52,7 +49,7 @@ var Scene = function(options) {
 
 
     self.controls = self.camera.controlConstructor(self.renderer,function(){
-        console.log(self.camera.position,self.camera.rotation);
+        // console.log(self.camera.position,self.camera.rotation);
         self.renderer.render(self.scene, self.camera);
     });
 

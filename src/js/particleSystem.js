@@ -36,6 +36,16 @@ var ParticleSystem = function() {
         sceneObject.add(cylinder);
     };
 
+    self.drawSlice = function(){
+        var width = Math.max(bounds.maxX, bounds.maxZ) + 2;
+        var geometry = new THREE.BoxBufferGeometry(width,0.1,width);
+        var material = new THREE.MeshBasicMaterial({color: 0x00ff00, wireframe: true});
+        var cube = new THREE.Mesh(geometry,material);
+        cube.name = "slice";
+
+        sceneObject.add(cube);
+    }
+
     // creates the particle system
     // based off of https://github.com/mrdoob/three.js/blob/master/examples/webgl_points_billboards.html
     self.createParticleSystem = function() {
@@ -76,10 +86,6 @@ var ParticleSystem = function() {
 
         let particles = new THREE.Points(geometry,material);
         sceneObject.add(particles);
-
-        //remove containment
-        //based off of https://stackoverflow.com/questions/18357529/threejs-remove-object-from-scene
-        // sceneObject.remove(sceneObject.getObjectByName("containment"));
 
     };
 
@@ -126,6 +132,12 @@ var ParticleSystem = function() {
 
                 // create the particle system
                 self.createParticleSystem();
+
+                //remove containment
+                //based off of https://stackoverflow.com/questions/18357529/threejs-remove-object-from-scene
+                sceneObject.remove(sceneObject.getObjectByName("containment"));
+
+                self.drawSlice();
             });
     };
 
