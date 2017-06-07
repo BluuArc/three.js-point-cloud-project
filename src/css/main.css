@@ -1,6 +1,9 @@
-body { margin: 0; }
+body { 
+    /*margin: 0; */
+    background-color: black;
+}
 
-#scene { width: 90%; height: 90%}
+#scene { width: 90%; height: 80%}
 
 /* SVG styling */
 svg {
@@ -13,8 +16,30 @@ path, line {
 
 .container-fluid{
     display: flex;
+    padding-left: auto;
+    padding-right: auto;
 }
 
 .row {
     margin-left: 0px;
+    margin-right: 0px;
+    border: 1px solid gray
+}
+
+p{
+    text-align: center;
+    color: white;
+}
+
+.axis path,
+.axis line {
+    fill: none;
+    stroke: white;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: sans-serif;
+    font-size: 11px;
+    fill: white;
 }

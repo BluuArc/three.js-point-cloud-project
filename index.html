@@ -31,10 +31,59 @@
     <div class="container-fluid">
         <div class="row">
             <div class="particleDiv col-md-6">
-                <div id="scene"></div>
+                <div id="scene"><p style="text-align:unset">Left Click to rotate. Right Click to pan. Scroll to zoom.</p></div>
             </div>
         </div>
         <div class="row" id="two-dim-vis">
+            <div class="controls">
+                <!--<button>Button 1</button>
+                <button>Button 2</button>-->
+                <div id="slider-controls">
+                    <p>[Slice Position]</p>
+                    <input id="position-slider" type="range" value="50"/>
+                    <p id="slider-value">50%</p>
+                    <script>
+                        var slider = document.getElementById('position-slider');
+                        slider.addEventListener('change',function(e){
+                            console.log("slice%:",e.target.value);
+                            document.getElementById('slider-value').innerHTML = e.target.value+ "%";
+                            App.moveSlice(1 - e.target.value/100);
+                        });
+                    </script>
+                </div>
+                <div id="tolerance-controls">
+                    <p style="text-align:unset; display:inline">Tolerance:</p> <input type=number step=0.01 min=0.00 max=1.00 value="0.01" id="tolerance-input"/>
+                    <script>
+                        var tolerance_input = document.getElementById("tolerance-input");
+                        tolerance_input.addEventListener('change', function(e){
+                            var value;
+                            try{
+                                value = parseFloat(e.target.value);
+                                if(isNaN(value)) throw "NaN entered";
+                                if(value < 0){
+                                    tolerance_input.value = 0;
+                                    alert("Tolerance value must be at least 0");
+                                    return;
+                                }else if(value > 1){
+                                    tolerance_input.value = 1;
+                                    alert("Tolerance value must be less than or equal to 1");
+                                    return;
+                                }
+                            }catch(err){
+                                console.log(err);
+                                alert(err);
+                                return;
+                            }
+                            App.setTolerance(value);
+
+                            //reset slider
+                            slider.value = 50;
+                            document.getElementById('slider-value').innerHTML = "50%";
+                        });
+                    </script>
+                </div>
+                <br>
+            </div>
         </div>
     </div>
 
