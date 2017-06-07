@@ -19,7 +19,8 @@ var interactiveCameraConstructor = function(aspect){
         var controls =  new THREE.OrbitControls(camera, renderer.domElement);
         controls.addEventListener('change', renderFn);
         controls.enableZoom = true;
-        controls.enablePan = false;
+        controls.enablePan = true;
+        controls.enableKeys = false;
         controls.maxPolarAngle = Math.PI / 2;
         return controls;
     }

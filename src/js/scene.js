@@ -11,8 +11,8 @@ var Scene = function(options) {
 
     // scale the width and height to the screen size
     // var width = d3.select('.particleDiv').node().clientWidth;
-    var width = window.innerWidth*0.5;
-    var height = window.innerHeight;
+    var width = window.innerWidth*0.475;
+    var height = window.innerHeight*0.975;
 
     // create the scene
     self.scene = new THREE.Scene();
@@ -54,7 +54,7 @@ var Scene = function(options) {
     });
 
     if (options.polarAngle) {
-        console.log(options.polarAngle);
+        // console.log(options.polarAngle);
         self.controls.minPolarAngle = options.polarAngle.min;
         self.controls.maxPolarAngle = options.polarAngle.max;
     }
