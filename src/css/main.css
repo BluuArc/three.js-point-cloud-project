@@ -10,3 +10,11 @@ svg {
 path, line {
     stroke: #777;
 }
+
+.container-fluid{
+    display: flex;
+}
+
+.row {
+    margin-left: 0px;
+}

@@ -90,7 +90,7 @@ var ParticleSystem = function() {
     };
 
     // data loading function
-    self.loadData = function(file){
+    self.loadData = function(file, callbackFn){
 
         // read the csv file
         d3.csv(file)
@@ -138,6 +138,7 @@ var ParticleSystem = function() {
                 sceneObject.remove(sceneObject.getObjectByName("containment"));
 
                 self.drawSlice();
+                callbackFn();
             });
     };
 
@@ -146,7 +147,9 @@ var ParticleSystem = function() {
 
         // load the data and setup the system
         initialize: function(file){
-            self.loadData(file);
+            return new Promise(function(fulfill,reject){
+                self.loadData(file,fulfill);
+            });
         },
 
         // accessor for the particle system

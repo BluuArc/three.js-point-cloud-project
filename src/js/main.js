@@ -16,15 +16,21 @@ var App = App || {};
         App.scene = new Scene({container:"scene"});
 
         // initialize the particle system
-        this.particleSystem = new ParticleSystem();
-        this.particleSystem.initialize('data/058.csv');
+        App.particleSystem = new ParticleSystem();
+        App.particleSystem.initialize('data/058.csv')
+            .then(function(){
+                App.scene.addObject( App.particleSystem.getParticleSystems());
+
+                // render the scene
+                App.scene.render();
+
+                //create graph
+                App.graph = new ParticleGraph();
+                App.graph.draw(App.particleSystem.getDataAt(0,0.1));
+                
+            });
 
         //add the particle system to the scene
-        App.scene.addObject( this.particleSystem.getParticleSystems());
-
-        // render the scene
-        App.scene.render();
-
 
     };
 
