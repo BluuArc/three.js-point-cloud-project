@@ -26,7 +26,7 @@
 
 </head>
 
-<body onload="App.start();">
+<body onload="App.start('data/058.csv');">
 
     <div class="container-fluid">
         <div class="row">
@@ -42,12 +42,14 @@
                         $('#status-text').text("Status: Loadng");
                         document.getElementById('position-slider').disabled = true;
                         document.getElementById('tolerance-input').disabled = true;
+                        document.getElementById('rotation-input').disabled = true;
                     }
 
                     function enable_input(){
                          $('#status-text').text("Status: Ready");
                         document.getElementById('position-slider').disabled = false;
                         document.getElementById('tolerance-input').disabled = false;
+                        document.getElementById('rotation-input').disabled = false;
                     }
                 </script>
                 <div id="slider-controls">

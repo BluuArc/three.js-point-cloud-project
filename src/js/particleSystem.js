@@ -194,7 +194,7 @@ var ParticleSystem = function() {
         var cosFactor = Math.cos(rotationAmount), sinFactor = Math.sin(rotationAmount);
         var filtered = data.filter(function (point) {
             let curZ = point.Z * cosFactor - point.X*sinFactor;
-            // return curZ >= min && curZ <= max;
+            // color code based off of https://stackoverflow.com/questions/29909192/dynamically-change-point-color-in-three-js-pointclouod
             if (curZ >= min && curZ <= max){
                 particleSystem.geometry.colors[index++].set(self.colorScale(point.concentration));
                 return true;

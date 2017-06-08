@@ -10,19 +10,26 @@ var App = App || {};
     var self = this;
 
     /* Entry point of the application */
-    App.start = function()
+    App.start = function(filepath)
     {
         // create a new scene
-        App.scene = new Scene({
-            container:"scene",
-            polarAngle: {min: 0, max: 2*Math.PI},
-            cameraPosition: {x: 5, y: 5, z: 20}
-        });
+        if(!App.scene){
+            App.scene = new Scene({
+                container:"scene",
+                polarAngle: {min: 0, max: 2*Math.PI},
+                cameraPosition: {x: 5, y: 5, z: 20}
+            });
+        }
 
         // initialize the particle system
+        if(App.particleSystem){ //remove old data
+            App.scene.removeObject(App.particleSystem.getParticleSystems());
+            delete App.particleSystem;
+        }
         App.particleSystem = new ParticleSystem();
         console.time("opTimer");
-        App.particleSystem.initialize('data/095.csv')
+        // App.particleSystem.initialize('data/095.csv')
+        App.particleSystem.initialize(filepath)
             .then(function(){
                 //add the particle system to the scene
                 App.scene.addObject( App.particleSystem.getParticleSystems());
