@@ -1,3 +1,7 @@
-data
+data/*
+!data/000.csv
+!data/058.csv
+!data/095.csv
+!data/120.csv
 node_modules
 
