@@ -21,7 +21,7 @@ var ParticleGraph = function(){
             //update current selection
             circles.attr('cx', function (d) { return xScale(d.X); })
                     .attr('cy', function (d) { return yScale(d.Y); })
-                    .attr('r', 1)
+                    // .attr('r', 1)
                     .style('fill', function (d) { return colorScale(d.concentration); });
 
             //create new as necessary

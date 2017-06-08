@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
     <!-- CSS Source -->
     <link rel="stylesheet" href="./src/css/main.css" />
+    <link rel="stylesheet" href="./src/css/range.css" />
 
     <!-- JS Libraries -->
     <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
@@ -24,32 +25,49 @@
     <script src="./src/js/particleGraph.js"></script>
     <script src="./src/js/main.js"></script>
 
+    <script>
+        function startVis(){
+            try{
+                var file = location.href.split("file=")[1].split('&')[0];
+                $('#instructions').html(`Left Click to rotate. Right Click to pan. Scroll to zoom.<br>File: ${file}`);
+                App.start(`data/${file}`);
+            }catch(err){
+                console.log(err);
+                App.start('data/058.csv'); //default
+            }
+        }
+    </script>
+
 </head>
 
-<body onload="App.start('data/058.csv');">
+<body onload="startVis();">
 
     <div class="container-fluid">
         <div class="row">
             <div class="particleDiv col-md-6">
-                <div id="scene"><p style="text-align:unset">Left Click to rotate. Right Click to pan. Scroll to zoom.</p>
-                <p style="text-align:unset" id="status-text">Status: Ready</div>
-            </div>
+                <div id="scene">
+                    <p style="text-align:unset" id="instructions">Left Click to rotate. Right Click to pan. Scroll to zoom.<br>File: 058.csv</p>
+
+                    <p style="text-align:unset" id="status-text">Status: Ready</div>
+                </div>
         </div>
         <div class="row" id="two-dim-vis">
             <div class="controls">
                 <script>
                     function disable_input(){
                         $('#status-text').text("Status: Loadng");
-                        document.getElementById('position-slider').disabled = true;
-                        document.getElementById('tolerance-input').disabled = true;
-                        document.getElementById('rotation-input').disabled = true;
+                        var elements = ['position-slider','tolerance-input','rotation-input','rotation-button'];
+                        for(var i = 0; i < elements.length; ++i){
+                            document.getElementById(elements[i]).disabled = true;
+                        }
                     }
 
                     function enable_input(){
-                         $('#status-text').text("Status: Ready");
-                        document.getElementById('position-slider').disabled = false;
-                        document.getElementById('tolerance-input').disabled = false;
-                        document.getElementById('rotation-input').disabled = false;
+                        $('#status-text').text("Status: Ready");
+                        var elements = ['position-slider', 'tolerance-input', 'rotation-input', 'rotation-button'];
+                        for (var i = 0; i < elements.length; ++i) {
+                            document.getElementById(elements[i]).disabled = false;
+                        }
                     }
                 </script>
                 <div id="slider-controls">
@@ -58,7 +76,7 @@
                     <p id="slider-value">50%</p>
 
                     <p style="text-align:unset; display:inline">Rotate by:</p> <input type=number min=-359 max=359 value="0" id="rotation-input" /><p style="text-align:unset; display:inline"> degrees</p>
-                    <!--<p id="slider-value">50%</p>-->
+                    <button id="rotation-button">Rotate</button>
                     <script>
                         var slider = document.getElementById('position-slider');
                         slider.addEventListener('change',function(e){
@@ -76,11 +94,11 @@
                             },100);
                         });
 
-                        var rotation = document.getElementById('rotation-input');
-                        rotation.addEventListener('change', function (e) {
+                        var rotation = document.getElementById('rotation-button');
+                        rotation.addEventListener('click', function (e) {
                                 var value;
                                 try {
-                                    value = parseInt(e.target.value);
+                                    value = parseInt(document.getElementById('rotation-input').value);
                                     if (isNaN(value)) throw "NaN entered";
                                     if (value < -359 || value > 359) {
                                         tolerance_input.value = 0;
