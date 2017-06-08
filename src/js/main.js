@@ -21,6 +21,7 @@ var App = App || {};
 
         // initialize the particle system
         App.particleSystem = new ParticleSystem();
+        console.time("opTimer");
         App.particleSystem.initialize('data/058.csv')
             .then(function(){
                 //add the particle system to the scene
@@ -31,7 +32,13 @@ var App = App || {};
 
                 //create graph
                 App.graph = new ParticleGraph();
-                App.graph.draw(App.particleSystem.getDataAtSlice(), App.particleSystem.getColorScale(), App.particleSystem.getDataScales());
+                var data = App.particleSystem.getDataAtSlice();
+                console.log("Finished getting data");
+                return App.graph.draw(data, App.particleSystem.getColorScale(), App.particleSystem.getDataScales())
+                    .then(function(){
+                       console.log("Done drawing");
+                       console.timeEnd("opTimer");
+                    });
                 
             });
 
@@ -39,15 +46,29 @@ var App = App || {};
     };
 
     App.moveSlice = function(percentage){
+        console.time("opTimer");
         App.particleSystem.moveSlice(percentage);
         
         //redraw graph
-        App.graph.draw(App.particleSystem.getDataAtSlice(), App.particleSystem.getColorScale(), App.particleSystem.getDataScales());
+        var data = App.particleSystem.getDataAtSlice();
+        console.log("Finished getting data");
+        return App.graph.draw(data, App.particleSystem.getColorScale(), App.particleSystem.getDataScales())
+            .then(function () {
+                console.log("Done drawing");
+                console.timeEnd("opTimer");
+            });
     };
 
     App.setTolerance = function(tolerance){
+        console.time("opTimer");
         App.particleSystem.setTolerance(tolerance);
-        App.graph.draw(App.particleSystem.getDataAtSlice(), App.particleSystem.getColorScale(), App.particleSystem.getDataScales());
+        var data = App.particleSystem.getDataAtSlice();
+        console.log("Finished getting data");
+        return App.graph.draw(data, App.particleSystem.getColorScale(), App.particleSystem.getDataScales())
+            .then(function () {
+                console.log("Done drawing");
+                console.timeEnd("opTimer");
+            });
     }
 
 }) ();

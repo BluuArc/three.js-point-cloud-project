@@ -38,7 +38,7 @@ p{
     shape-rendering: crispEdges;
 }
 
-.axis text {
+.axis text, .axis-label {
     font-family: sans-serif;
     font-size: 11px;
     fill: white;

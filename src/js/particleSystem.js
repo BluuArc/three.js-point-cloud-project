@@ -17,7 +17,17 @@ var ParticleSystem = function() {
     // bounds of the data
     var bounds = {};
 
+    var rotationAmount = 0;
+
     self.colorScale = {};
+
+    function rad_to_deg(radians){
+        return radians * 180 / Math.PI;
+    }
+
+    function deg_to_rad(degrees){
+        return degrees * Math.PI / 180;
+    }
 
     // create the containment box.
     // This cylinder is only to guide development.
@@ -98,6 +108,7 @@ var ParticleSystem = function() {
         }
 
         let particles = new THREE.Points(geometry,material);
+        particles.name = "particleSystem";
         sceneObject.add(particles);
 
     };
@@ -172,10 +183,21 @@ var ParticleSystem = function() {
 
     function getDataAt(z, tolerance) {
         var min = z - tolerance, max = z + tolerance;
+        //formula based on https://www.siggraph.org/education/materials/HyperGraph/modeling/mod_tran/3drota.htm
+        var cosFactor = Math.cos(rotationAmount), sinFactor = Math.sin(rotationAmount);
         var filtered = data.filter(function (point) {
-            let curZ = point.Z;
+            let curZ = point.Z * cosFactor - point.X*sinFactor;
             return curZ >= min && curZ <= max;
         });
+
+        if(rotationAmount % 90 !== 0){
+            filtered = filtered.map(function(d){
+                let [x,y,z] = [d.X,d.Y,d.Z];
+                d.X = z*sinFactor + x*cosFactor;
+                d.Z = z.cosFactor - x*sinFactor;
+                return d;
+            });
+        }
 
         return filtered;
     }
@@ -202,7 +224,7 @@ var ParticleSystem = function() {
                 tolerance = self.tolerance;
             }
             var slice = sceneObject.getObjectByName('slice');
-            console.log("Getting data with tolerance",tolerance,"and z position", slice.position.z);
+            console.log("Getting data with tolerance",tolerance,"and z position", slice.position.z, "and rotation",rotationAmount);
             return getDataAt(slice.position.z,tolerance);
         },
 
@@ -229,6 +251,16 @@ var ParticleSystem = function() {
 
         getDataScales: function(){
             return self.scales;
+        },
+
+        rotateY: function(degrees){
+            var radians = deg_to_rad(degrees);
+            var particleSystem = sceneObject.getObjectByName('particleSystem');
+            if(particleSystem){
+                rotationAmount += radians;
+                particleSystem.rotateY(radians);
+            }
+            return rad_to_deg(rotationAmount);
         }
     };
 
