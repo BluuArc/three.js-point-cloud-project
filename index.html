@@ -31,7 +31,8 @@
     <div class="container-fluid">
         <div class="row">
             <div class="particleDiv col-md-6">
-                <div id="scene"><p style="text-align:unset">Left Click to rotate. Right Click to pan. Scroll to zoom.</p></div>
+                <div id="scene"><p style="text-align:unset">Left Click to rotate. Right Click to pan. Scroll to zoom.</p>
+                <p style="text-align:unset" id="status-text">Status: Ready</div>
             </div>
         </div>
         <div class="row" id="two-dim-vis">
@@ -47,7 +48,20 @@
                         slider.addEventListener('change',function(e){
                             console.log("slice%:",e.target.value);
                             document.getElementById('slider-value').innerHTML = e.target.value+ "%";
-                            App.moveSlice(1 - e.target.value/100);
+                            //disable input while loading
+                            $('#status-text').text("Status: Loadng");
+                            document.getElementById('position-slider').disabled = true;
+                            document.getElementById('tolerance-input').disabled = true;
+                            setTimeout(function(){
+                                App.moveSlice(1 - e.target.value/100)
+                                    .then(function(){
+                                        //re-enable input after loading
+                                        $('#status-text').text("Status: Ready");
+                                        document.getElementById('position-slider').disabled = false;
+                                        document.getElementById('tolerance-input').disabled = false;
+                                    });
+                                
+                            },100);
                         });
                     </script>
                 </div>
@@ -74,8 +88,20 @@
                                 alert(err);
                                 return;
                             }
-                            App.setTolerance(value);
 
+                            //disable input while loading
+                            $('#status-text').text("Status: Loadng");
+                            document.getElementById('position-slider').disabled = true;
+                            document.getElementById('tolerance-input').disabled = true;
+                            setTimeout(function () {
+                                App.setTolerance(value)
+                                    .then(function () {
+                                        //re-enable input after loading
+                                        $('#status-text').text("Status: Ready");
+                                        document.getElementById('position-slider').disabled = false;
+                                        document.getElementById('tolerance-input').disabled = false;
+                                    });
+                            }, 100);
                             //reset slider
                             slider.value = 50;
                             document.getElementById('slider-value').innerHTML = "50%";
