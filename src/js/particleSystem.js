@@ -79,12 +79,17 @@ var ParticleSystem = function() {
         });
 
         self.colorScale = (function(){
-            var interpolator = d3.interpolateHsl('#ffffb2', '#bd0026');
+            var interpolator = d3.interpolateCubehelix('#ffffb2', '#bd0026');
             var scale = self.scales.concentrationScale;
-            // var scale = d3.scaleLinear()
-            //     .domain([bounds.concentrationMin,bounds.concentrationMax]) // range of data
-            //     .range([0, 1]); // range of results
             return function(value){
+                return interpolator(scale(value));
+            }
+        })(); 
+
+        self.grayScale = (function () {
+            var interpolator = d3.interpolateCubehelix('#252525','#bdbdbd');
+            var scale = self.scales.concentrationScale;
+            return function (value) {
                 return interpolator(scale(value));
             }
         })(); 
@@ -182,22 +187,40 @@ var ParticleSystem = function() {
     };
 
     function getDataAt(z, tolerance) {
+        var particleSystem = sceneObject.getObjectByName("particleSystem");
         var min = z - tolerance, max = z + tolerance;
+        let index = 0;
         //formula based on https://www.siggraph.org/education/materials/HyperGraph/modeling/mod_tran/3drota.htm
         var cosFactor = Math.cos(rotationAmount), sinFactor = Math.sin(rotationAmount);
         var filtered = data.filter(function (point) {
             let curZ = point.Z * cosFactor - point.X*sinFactor;
-            return curZ >= min && curZ <= max;
+            // return curZ >= min && curZ <= max;
+            if (curZ >= min && curZ <= max){
+                particleSystem.geometry.colors[index++].set(self.colorScale(point.concentration));
+                return true;
+            }else{
+                particleSystem.geometry.colors[index++].set(self.grayScale(point.concentration));
+                return false;
+            }
         });
 
-        if(rotationAmount % 90 !== 0){
+        if(rotationAmount !== 0){
+            console.log("Rotating data points");
             filtered = filtered.map(function(d){
                 let [x,y,z] = [d.X,d.Y,d.Z];
-                d.X = z*sinFactor + x*cosFactor;
-                d.Z = z.cosFactor - x*sinFactor;
-                return d;
+                let newPoint = {
+                    concentration: d.concentration,
+                    X: z * sinFactor + x * cosFactor,
+                    Y: y,
+                    Z: z * cosFactor - x * sinFactor  
+                };
+                // d.X = z*sinFactor + x*cosFactor;
+                // d.Z = z*cosFactor - x*sinFactor;
+                return newPoint;
             });
         }
+
+        particleSystem.geometry.colorsNeedUpdate = true; 
 
         return filtered;
     }
@@ -259,6 +282,7 @@ var ParticleSystem = function() {
             if(particleSystem){
                 rotationAmount += radians;
                 particleSystem.rotateY(radians);
+                self.drawSlice(self.tolerance);
             }
             return rad_to_deg(rotationAmount);
         }

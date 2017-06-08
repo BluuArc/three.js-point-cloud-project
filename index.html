@@ -37,32 +37,73 @@
         </div>
         <div class="row" id="two-dim-vis">
             <div class="controls">
-                <!--<button>Button 1</button>
-                <button>Button 2</button>-->
+                <script>
+                    function disable_input(){
+                        $('#status-text').text("Status: Loadng");
+                        document.getElementById('position-slider').disabled = true;
+                        document.getElementById('tolerance-input').disabled = true;
+                    }
+
+                    function enable_input(){
+                         $('#status-text').text("Status: Ready");
+                        document.getElementById('position-slider').disabled = false;
+                        document.getElementById('tolerance-input').disabled = false;
+                    }
+                </script>
                 <div id="slider-controls">
                     <p>[Slice Position]</p>
                     <input id="position-slider" type="range" value="50"/>
                     <p id="slider-value">50%</p>
+
+                    <p style="text-align:unset; display:inline">Rotate by:</p> <input type=number min=-359 max=359 value="0" id="rotation-input" /><p style="text-align:unset; display:inline"> degrees</p>
+                    <!--<p id="slider-value">50%</p>-->
                     <script>
                         var slider = document.getElementById('position-slider');
                         slider.addEventListener('change',function(e){
                             console.log("slice%:",e.target.value);
                             document.getElementById('slider-value').innerHTML = e.target.value+ "%";
                             //disable input while loading
-                            $('#status-text').text("Status: Loadng");
-                            document.getElementById('position-slider').disabled = true;
-                            document.getElementById('tolerance-input').disabled = true;
+                            disable_input()
                             setTimeout(function(){
                                 App.moveSlice(1 - e.target.value/100)
                                     .then(function(){
                                         //re-enable input after loading
-                                        $('#status-text').text("Status: Ready");
-                                        document.getElementById('position-slider').disabled = false;
-                                        document.getElementById('tolerance-input').disabled = false;
+                                       enable_input();
                                     });
                                 
                             },100);
                         });
+
+                        var rotation = document.getElementById('rotation-input');
+                        rotation.addEventListener('change', function (e) {
+                                var value;
+                                try {
+                                    value = parseInt(e.target.value);
+                                    if (isNaN(value)) throw "NaN entered";
+                                    if (value < -359 || value > 359) {
+                                        tolerance_input.value = 0;
+                                        alert("Tolerance value must be between -359 and 359");
+                                        return;
+                                    }
+                                } catch (err) {
+                                    console.log(err);
+                                    alert(err);
+                                    return;
+                                }
+
+                                //disable input while loading
+                                disable_input();
+                                setTimeout(function () {
+                                    App.setRotation(value)
+                                        .then(function () {
+                                            //re-enable input after loading
+                                            enable_input();
+                                        });
+                                }, 100);
+                                //reset slider
+                                slider.value = 50;
+                                document.getElementById('slider-value').innerHTML = "50%";
+                            });
                     </script>
                 </div>
                 <div id="tolerance-controls">
@@ -90,16 +131,12 @@
                             }
 
                             //disable input while loading
-                            $('#status-text').text("Status: Loadng");
-                            document.getElementById('position-slider').disabled = true;
-                            document.getElementById('tolerance-input').disabled = true;
+                            disable_input();
                             setTimeout(function () {
                                 App.setTolerance(value)
                                     .then(function () {
                                         //re-enable input after loading
-                                        $('#status-text').text("Status: Ready");
-                                        document.getElementById('position-slider').disabled = false;
-                                        document.getElementById('tolerance-input').disabled = false;
+                                        enable_input();
                                     });
                             }, 100);
                             //reset slider

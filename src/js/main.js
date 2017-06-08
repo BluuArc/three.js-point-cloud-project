@@ -22,7 +22,7 @@ var App = App || {};
         // initialize the particle system
         App.particleSystem = new ParticleSystem();
         console.time("opTimer");
-        App.particleSystem.initialize('data/058.csv')
+        App.particleSystem.initialize('data/095.csv')
             .then(function(){
                 //add the particle system to the scene
                 App.scene.addObject( App.particleSystem.getParticleSystems());
@@ -69,6 +69,18 @@ var App = App || {};
                 console.log("Done drawing");
                 console.timeEnd("opTimer");
             });
-    }
+    };
+
+    App.setRotation = function(degrees){
+        console.time("opTimer");
+        App.particleSystem.rotateY(degrees);
+        var data = App.particleSystem.getDataAtSlice();
+        console.log("Finished getting data");
+        return App.graph.draw(data, App.particleSystem.getColorScale(), App.particleSystem.getDataScales())
+            .then(function () {
+                console.log("Done drawing");
+                console.timeEnd("opTimer");
+            });
+    };
 
 }) ();
